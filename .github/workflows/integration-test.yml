@@ -1,0 +1,46 @@
+name: Integration Testing
+
+# Trigger the workflow manually with the workflow_dispatch event
+on:
+  workflow_dispatch:
+    inputs:
+      vm_ip:
+        description: "Enter VM IP Address"
+        required: true
+        type: string
+      env_file:
+        description: "Select environment file"
+        required: true
+        type: string
+        default: "Default (tilt up -- --headless=true)"
+      bins:
+        description: "Enter number of bins"
+        required: true
+        type: string
+        default: "100"
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt  # Modify this if your Python scripts require dependencies
+
+    - name: Run integration test script
+      run: |
+        chmod +x your_script.sh  # Make sure your script is executable
+        ./your_script.sh "${{ github.event.inputs.vm_ip }}" "${{ github.event.inputs.env_file }}" "${{ github.event.inputs.bins }}"
+      env:
+        VM_IP: ${{ github.event.inputs.vm_ip }}
+        ENV_FILE: ${{ github.event.inputs.env_file }}
+        BINS: ${{ github.event.inputs.bins }}
