@@ -58,6 +58,23 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  setup_and_run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup and Execute Bash Script
+      run: |
+        echo "Running bash script with the following parameters:"
+        echo "VM IP Address: ${{ inputs.vm_ip_address }}"
+        echo "Environment File: ${{ inputs.env_file }}"
+        echo "Box Count: ${{ inputs.box_count }}"
+
+        # Execute your bash script with the provided inputs
+        ./run_remote.sh --env ${{ inputs.env_file }} --bin-count ${{ inputs.box_count }}
+
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
